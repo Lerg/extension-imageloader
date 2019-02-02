@@ -1,0 +1,80 @@
+--[[
+Image Loader API.
+
+local image_resource = imageloader.load{
+	data = data,                       -- Load from string.
+	filename = filename,               -- Load from file. Only if data is not set.
+	channels = 4,                      -- Force N channels (1, 3 or 4).
+	info = true,                       -- If true, don't decode the entire image, just return it's information.
+	no_vertical_flip = true,           -- If true, don't flip the image under the hood for compatibility with Defold.
+	no_async = true,                   -- If true, perform sync call with a listener.
+	listener = function(self, img_res) -- If listener is set, the loading is async.
+		print(img_res)
+	end
+}
+
+Returns a table
+{
+	header = {             -- Image information header.
+		width = number,    -- Width of the loaded image.
+		height = number,   -- Height of the loaded image.
+		channels = number, -- Actual channel count in the image.
+		format = number,   -- One of resource.TEXTURE_FORMAT_LUMINANCE, resource.TEXTURE_FORMAT_RGB or resource.TEXTURE_FORMAT_RGBA.
+		type = resource.TEXTURE_TYPE_2D,
+		num_mip_maps = 1
+	},
+	buffer = buffer        -- Pixel data buffer object.
+}
+]]
+
+-- Set the loaded texture visible on a model.
+local function apply_image(self, image_resource)
+	pprint(image_resource)
+	if image_resource.buffer then
+		resource.set_texture(go.get('#model', 'texture0'), image_resource.header, image_resource.buffer)
+		local aspect = image_resource.header.width / image_resource.header.height
+		local scale = 300
+		go.set_scale(vmath.vector3(scale, scale / aspect, 1))
+	else
+		print('The image was not loaded.')
+	end
+end
+
+function init(self)
+	local ext = 'jpg'
+	local from_file = false
+	local async = false
+	ext = 'png'      -- Uncomment to test PNG loading.
+	--from_file = true -- Uncomment to test loading from a file.
+	--async = true     -- Uncomment to test async loading.
+
+	-- Loader parameters table.
+	local params = {
+		--no_async = true,
+		--channels = 1,
+		--info = true
+	} 
+	
+	local data = sys.load_resource('/res/image.' .. ext)
+
+	if from_file then
+		local filename = directories.path_for_file('image.' .. ext, directories.documents)
+		local image_file = io.open(filename, 'wb')
+		image_file:write(data)
+		image_file:close()
+
+		params.filename = filename -- Load from file.
+	else
+		params.data = data -- Load from string.
+	end
+
+	if async then
+		params.listener = apply_image -- Perform async call.
+	end
+
+	local image_resource = imageloader.load(params) -- Load image.
+	
+	if not async then
+		apply_image(self, image_resource)
+	end
+end

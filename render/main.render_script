@@ -1,0 +1,27 @@
+function init(self)
+	self.asset_pred = render.predicate{'asset'}
+	self.view = vmath.matrix4()
+	self.clear_bits = {[render.BUFFER_COLOR_BIT] = vmath.vector4(0, 0.1, 0.1, 1), [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0}
+end
+
+function update(self, dt)
+	local width = render.get_window_width()
+	local height = render.get_window_height()
+	render.clear(self.clear_bits)
+
+	render.set_viewport(0, 0, width, height)
+	render.set_view(self.view)
+
+	local proj_width, proj_height = width / 2, height / 2
+	render.set_projection(vmath.matrix4_orthographic(-proj_width, proj_width, -proj_height, proj_height, -1000, 1000))
+
+	render.set_depth_mask(false)
+	render.disable_state(render.STATE_CULL_FACE)
+	render.disable_state(render.STATE_STENCIL_TEST)
+
+	render.enable_state(render.STATE_DEPTH_TEST)
+	render.enable_state(render.STATE_BLEND)
+	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+
+	render.draw(self.asset_pred)
+end
