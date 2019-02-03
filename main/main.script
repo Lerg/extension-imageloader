@@ -44,7 +44,7 @@ function init(self)
 	local ext = 'jpg'
 	local from_file = false
 	local async = false
-	ext = 'png'      -- Uncomment to test PNG loading.
+	--ext = 'png'      -- Uncomment to test PNG loading.
 	--from_file = true -- Uncomment to test loading from a file.
 	--async = true     -- Uncomment to test async loading.
 
