@@ -43,14 +43,14 @@ If the loading is performed without a listener, the function returns `image_reso
 
 ### `image_resource` table
 
-- header - table, image information header.
-	- width - number, width of the loaded image.
-	- height - number, height of the loaded image.
-	- channels - number, actual channel count in the image.
-	- format - number, one of `resource.TEXTURE_FORMAT_LUMINANCE`, `resource.TEXTURE_FORMAT_RGB` or `resource.TEXTURE_FORMAT_RGBA`.
-	- type, always `resource.TEXTURE_TYPE_2D`.
-	- num_mip_maps - number, always 1.
-- buffer - buffer, pixel data buffer object.
+- `header` - table, image information header.
+	- `width` - number, width of the loaded image.
+	- `height` - number, height of the loaded image.
+	- `channels` - number, actual channel count in the image.
+	- `format` - number, one of `resource.TEXTURE_FORMAT_LUMINANCE`, `resource.TEXTURE_FORMAT_RGB` or `resource.TEXTURE_FORMAT_RGBA`.
+	- `type`, always `resource.TEXTURE_TYPE_2D`.
+	- `num_mip_maps` - number, always 1.
+- `buffer` - buffer, pixel data buffer object.
 
 # Examples
 
