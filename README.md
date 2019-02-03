@@ -2,7 +2,7 @@
 
 Image loader extension for Defold.
 
-Loads JPG, PNG and other images effectively into Defold's Buffer object.
+Loads JPG, PNG and other images efficiently into Defold's Buffer object.
 
 It can load images in async and sync modes. And it can only process the header of an image to provide just width, height and channels information without fully decoding the image.
 
@@ -103,4 +103,16 @@ local image_resource = imageloader.load{
 }
 
 pprint(image_resource)
+```
+
+## Change texture of a model
+
+```lua
+local data = sys.load_resource('/res/image.jpg')
+
+local image_resource = imageloader.load{
+	data = data
+}
+
+resource.set_texture(go.get('#model', 'texture0'), image_resource.header, image_resource.buffer)
 ```
