@@ -261,10 +261,12 @@ static int extension_load(lua_State *L) {
 		if (has_listener) {
 			lua_rawgeti(L, LUA_REGISTRYINDEX, listener);
 			dmScript::Unref(L, LUA_REGISTRYINDEX, listener);
+
+			dmScript::GetInstance(L);
 		}
 		push_image_resource(L, width, height, channels, desired_channels, buffer);
 		if (has_listener) {
-			lua_call(L, 1, 0);
+			lua_call(L, 2, 0);
 			lua_pushnil(L);
 		}
 	}
@@ -294,6 +296,7 @@ dmExtension::Result INITIALIZE(dmExtension::Params *params) {
 dmExtension::Result UPDATE(dmExtension::Params *params) {
 	while (!tasks.empty()) {
 			Task *task = tasks.front();
+			tasks.pop();
 			if (task->listener != LUA_REFNIL && task->listener != LUA_NOREF) {
 				lua_State *L = params->m_L;
 				dmScript::Unref(L, LUA_REGISTRYINDEX, task->ref); // Release contents or filename string.
@@ -310,7 +313,6 @@ dmExtension::Result UPDATE(dmExtension::Params *params) {
 
 				lua_call(L, 2, 0); // Make the call.
 			}
-			tasks.pop();
 			delete task;
 		}
 	return dmExtension::RESULT_OK;
