@@ -144,16 +144,15 @@ static void push_image_resource(lua_State *L, int width, int height, int channel
 // Thread function for async loading.
 static int loading_thread_proc(void *user_data) {
 	ThreadParams *params = (ThreadParams *)user_data;
-	Task *task = new Task{
-		.script_instance = params->script_instance,
-		.ref = params->ref,
-		.listener = params->listener,
-		.width = 0,
-		.height = 0,
-		.channels = 0,
-		.desired_channels = params->desired_channels,
-		.buffer = 0
-	};
+	Task *task = new Task();
+	task->script_instance = params->script_instance;
+	task->ref = params->ref;
+	task->listener = params->listener;
+	task->width = 0;
+	task->height = 0;
+	task->channels = 0;
+	task->desired_channels = params->desired_channels;
+	task->buffer = 0;
 
 	load_image(params->contents, params->content_length, params->filename, &task->width, &task->height, &task->channels, params->desired_channels, params->info, params->no_vertical_flip, &task->buffer);
 	delete params;
@@ -237,17 +236,16 @@ static int extension_load(lua_State *L) {
 
 	if (has_listener && !no_async) {
 		dmScript::GetInstance(L);
-		ThreadParams *params = new ThreadParams{
-			.script_instance = dmScript::Ref(L, LUA_REGISTRYINDEX),
-			.contents = contents,
-			.content_length = content_length,
-			.filename = filename,
-			.ref = ref,
-			.listener = listener,
-			.desired_channels = desired_channels,
-			.info = info,
-			.no_vertical_flip = no_vertical_flip
-		};
+		ThreadParams *params = new ThreadParams();
+		params->script_instance = dmScript::Ref(L, LUA_REGISTRYINDEX);
+		params->contents = contents;
+		params->content_length = content_length;
+		params->filename = filename;
+		params->ref = ref;
+		params->listener = listener;
+		params->desired_channels = desired_channels;
+		params->info = info;
+		params->no_vertical_flip = no_vertical_flip;
 		thread_create(loading_thread_proc, (void *)params, "imageloader_thread", THREAD_STACK_SIZE_DEFAULT);
 		lua_pushnil(L);
 	} else {

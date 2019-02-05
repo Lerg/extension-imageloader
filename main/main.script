@@ -55,7 +55,7 @@ function init(self)
 		--info = true
 	} 
 	
-	local data = sys.load_resource('/res/image.' .. ext)
+	local data = sys.load_resource('/res/image_' .. ext .. '.' .. ext)
 
 	if from_file then
 		local filename = directories.path_for_file('image.' .. ext, directories.documents)
