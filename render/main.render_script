@@ -15,7 +15,7 @@ function update(self, dt)
 	local proj_width, proj_height = width / 2, height / 2
 	render.set_projection(vmath.matrix4_orthographic(-proj_width, proj_width, -proj_height, proj_height, -1000, 1000))
 
-	render.set_depth_mask(false)
+	render.set_depth_mask(true)
 	render.disable_state(render.STATE_CULL_FACE)
 	render.disable_state(render.STATE_STENCIL_TEST)
 
