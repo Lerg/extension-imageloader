@@ -131,7 +131,7 @@ static void push_image_resource(lua_State *L, int width, int height, int channel
 	lua_setfield(L, -3, "format");
 
 	lua_pop(L, 1); // resource
-	
+
 	lua_setfield(L, -2, "header");
 
 	if (buffer != 0) {
@@ -165,8 +165,8 @@ static int extension_load(lua_State *L) {
 	DM_LUA_STACK_CHECK(L, 1);
 	int params_index = 1;
 	if (!lua_istable(L, params_index)) {
-        return DM_LUA_ERROR("The argument must be params table.");
-    }
+		return DM_LUA_ERROR("The argument must be params table.");
+	}
 	const char *contents = NULL;
 	size_t content_length = 0;
 	const char *filename = NULL;
@@ -271,6 +271,12 @@ static int extension_load(lua_State *L) {
 	return 1;
 }
 
+static int extension_debug_set_vertical_flip(lua_State *L) {
+	if (lua_isboolean(L, 1)) {
+		stbi_set_flip_vertically_on_load(lua_toboolean(L, 1));
+	}
+}
+
 dmExtension::Result APP_INITIALIZE(dmExtension::AppParams *params) {
 	return dmExtension::RESULT_OK;
 }
@@ -283,6 +289,7 @@ dmExtension::Result INITIALIZE(dmExtension::Params *params) {
 	lua_State *L = params->m_L;
 	const luaL_Reg lua_functions[] = {
 		{"load", extension_load},
+		{"debug_set_vertical_flip", extension_debug_set_vertical_flip},
 		{NULL, NULL}
 	};
 

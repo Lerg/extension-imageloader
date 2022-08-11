@@ -11,8 +11,8 @@ height = 960
 
 [project]
 title = Image Loader
-dependencies = https://github.com/Lerg/extension-directories/archive/master.zip
 custom_resources = res
+dependencies#0 = https://github.com/Lerg/extension-directories/archive/master.zip
 
 [model]
 max_count = 1024
